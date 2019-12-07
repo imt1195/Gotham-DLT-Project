@@ -8,6 +8,5 @@ contract SimpleStorage {
     function set(uint x) public {
         storedData = x;
 
-        emit StorageSet("Data stored successfully!");
     }
 }

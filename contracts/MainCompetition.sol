@@ -1,84 +1,55 @@
-pragma solidity >=0.5.0 <0.6.0;
+pragma solidity >=0.4.21 <0.6.0;
 
-import "./ownable.sol";
+contract MainCompetition {
+    event StorageSet(string _message);
+    event NewCompetition(uint _id, string _name);
 
-contract MainCompetition is Ownable {
-    // TO-DO: add OpenZeppelin to transfer ownership of contract
-
-    address public _owner;
-
-    enum userType {Participant, Admin, Judge}
-    mapping(address => userType)  public addressToUserType;
-
-    // TO-DO: change to array? admin more than one Competition
-    // TO-DO: change state variables to not public
-    mapping(uint256 => address) public adminOfCID;
-
-    mapping(uint256 => Competition) public CIDToCompetition;
+    uint public storedData;
 
     struct Competition {
-        uint256 CID;
         string name;
         uint256 totalPrize;
-        address admin;
-        mapping(address => bool) participants;
         bool isOpen;
-        uint256 fee;
+        // address[] participants;
     }
 
-    event CompetitionCreated (uint256 CID, string name);
+    Competition[] public competitions;
 
-    modifier isCompetition (uint256 _CID) {
-        require(CIDToCompetition[_CID].CID > 0, "No Competition started with that ID");
-        _;
+    mapping(uint => address) public compToAdmin;
+
+    function set(uint x) public {
+        storedData = x;
     }
 
-    modifier isAdmin() {
-        require(addressToUserType[msg.sender] == userType.Admin, "The Sender is not an Admin of any Competition");
-        _;
+    // Internal function for creating a competition
+    function _createComp (string memory _name, uint256 _totalPrize) internal {
+        uint id = competitions.push(Competition(_name, _totalPrize,false));
+        compToAdmin[id] = msg.sender;
+        emit NewCompetition(id, _name);
     }
 
-    modifier isNotAdmin() {
-        require(addressToUserType[msg.sender] != userType.Admin, "The Sender is an Admin of a Competition");
-        _;
+    // As an admin, I can create a competition with a name and prize money
+    function createCompetition (string memory _name, uint256 _totalPrize) public {
+        // require(msg.value == _totalPrize, "Message Value does not match prize amount.");
+        _createComp(_name, _totalPrize);
     }
 
-    modifier isAdminOf (uint256 _CID) {
-        require(adminOfCID[_CID] == msg.sender, "The Sender is not an Admin of that Competition");
-        _;
-    }
-
-    modifier isParticipant() {
-        require(addressToUserType[msg.sender] == userType.Participant, "The Sender is not an Participant of any Competition");
-        _;
-    }
-
-    modifier isParticipantOf (uint256 _CID, address _allegedParticipant) {
-        require(CIDToCompetition[_CID].participants[_allegedParticipant], "The proposed address is not a participant in that competition");
-        _;
-    }
-
-    //TO-DO: add Counter
-    function createCompetition (string memory _name, uint256 _totalPrize, uint256 _fee) public payable onlyOwner {
+    // As an admin, I can pull an array of competitions IDs
+    function getCompetitions() public returns(uint256[] memory) {
 
     }
 
-    // Ends Competition -- Rescricted to Admins and Only Admins of this Competition
-    function endCompetition (uint256 _CID) public isAdminOf(_CID) {
+    // As an admin, I can end a competition and select the winning participant
+    function endCompetition (uint _compId, address _winningParticipant) public {
 
     }
 
-    function chooseWinner (uint256 _CID, address _winnerAddress) public isAdmin isAdminOf(_CID) isParticipant()
-    isParticipantOf(_CID, _winnerAddress) {
+    // As a participant, I can sign up for a competition
+    function joinCompetition (uint _compId) public {
 
     }
 
-    function joinCompetition (uint256 _CID) public payable isCompetition(_CID) isNotAdmin() {
-        if (CIDToCompetition[_CID].fee > 0) {
-            require(msg.value >= CIDToCompetition[_CID].fee, "Value did not meet the competition fee");
-        }
-        
 
-    }
+
 
 }

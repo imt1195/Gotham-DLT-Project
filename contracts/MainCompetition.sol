@@ -3,82 +3,74 @@ pragma solidity >=0.5.0 <0.6.0;
 import "./ownable.sol";
 
 contract MainCompetition is Ownable {
-    // TO-DO: add OpenZeppelin to transfer ownership of contract
 
-    address public _owner;
+    event NewCompetition (uint256 compId, string name);
 
-    enum userType {Participant, Admin, Judge}
-    mapping(address => userType)  public addressToUserType;
+    // enum userType {Admin, Participant, Judge}
+    mapping(address => uint)  public addressToUserType;
 
     // TO-DO: change to array? admin more than one Competition
     // TO-DO: change state variables to not public
-    mapping(uint256 => address) public adminOfCID;
-
-    mapping(uint256 => Competition) public CIDToCompetition;
+    mapping(address => uint256) public adminToCompId;
+    mapping(uint256 => address) public compIdToAdmin;
 
     struct Competition {
-        uint256 CID;
         string name;
         uint256 totalPrize;
-        address admin;
-        mapping(address => bool) participants;
         bool isOpen;
-        uint256 fee;
     }
 
-    event CompetitionCreated (uint256 CID, string name);
-
-    modifier isCompetition (uint256 _CID) {
-        require(CIDToCompetition[_CID].CID > 0, "No Competition started with that ID");
-        _;
-    }
+    Competition[] public competitions;
 
     modifier isAdmin() {
-        require(addressToUserType[msg.sender] == userType.Admin, "The Sender is not an Admin of any Competition");
-        _;
-    }
-
-    modifier isNotAdmin() {
-        require(addressToUserType[msg.sender] != userType.Admin, "The Sender is an Admin of a Competition");
-        _;
-    }
-
-    modifier isAdminOf (uint256 _CID) {
-        require(adminOfCID[_CID] == msg.sender, "The Sender is not an Admin of that Competition");
+        require(addressToUserType[msg.sender] == 0, "The Sender is not an Admin of any Competition");
         _;
     }
 
     modifier isParticipant() {
-        require(addressToUserType[msg.sender] == userType.Participant, "The Sender is not an Participant of any Competition");
+        require(addressToUserType[msg.sender] == 1, "The Sender is not an Participant of any Competition");
         _;
     }
 
-    modifier isParticipantOf (uint256 _CID, address _allegedParticipant) {
-        require(CIDToCompetition[_CID].participants[_allegedParticipant], "The proposed address is not a participant in that competition");
-        _;
-    }
+    // modifier isParticipantOf (uint256 _CID, address _allegedParticipant) {
+    //     require(compIdToComp[_CID].participants[_allegedParticipant], "The proposed address is not a participant in that competition");
+    //     _;
+    // }
 
-    //TO-DO: add Counter
-    function createCompetition (string memory _name, uint256 _totalPrize, uint256 _fee) public payable onlyOwner {
-
-    }
-
-    // Ends Competition -- Rescricted to Admins and Only Admins of this Competition
-    function endCompetition (uint256 _CID) public isAdminOf(_CID) {
+    function _createComp (string memory _name, uint256 _totalPrize) internal {
+        uint id = competitions.push(Competition(_name, _totalPrize,false));
+        compIdToAdmin[id] = msg.sender;
+        emit NewCompetition(id, _name);
 
     }
 
-    function chooseWinner (uint256 _CID, address _winnerAddress) public isAdmin isAdminOf(_CID) isParticipant()
-    isParticipantOf(_CID, _winnerAddress) {
-
-    }
-
-    function joinCompetition (uint256 _CID) public payable isCompetition(_CID) isNotAdmin() {
-        if (CIDToCompetition[_CID].fee > 0) {
-            require(msg.value >= CIDToCompetition[_CID].fee, "Value did not meet the competition fee");
+    function selectUserType (string memory _userType) public {
+        if (keccak256(abi.encodePacked(_userType)) == keccak256(abi.encodePacked("Admin"))) {
+            addressToUserType[msg.sender] = 1;
+        } else {
+            addressToUserType[msg.sender] = 2;
         }
-        
-
     }
+
+    function createCompetition (string memory _name, uint256 _totalPrize) public payable isAdmin() {
+        require(msg.value == _totalPrize, "Message Value does not match prize amount.");
+        _createComp(_name, _totalPrize);
+    }
+
+    // // Ends Competition -- Rescricted to Admins and Only Admins of this Competition
+    // function endCompetition (uint256 _CID) public isAdminOf(_CID) {
+
+    // }
+
+    // function chooseWinner (uint256 _CID, address _winnerAddress) public isAdminOf(_CID) isParticipant()
+    // isParticipantOf(_CID, _winnerAddress) {
+
+    // }
+
+    // function joinCompetition (uint256 _CID) public payable isCompetition(_CID) {
+    //     if (compIdToComp[_CID].fee > 0) {
+    //         require(msg.value >= compIdToComp[_CID].fee, "Value did not meet the competition fee");
+    //     }
+    // }
 
 }

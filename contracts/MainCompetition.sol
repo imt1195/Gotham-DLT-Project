@@ -34,7 +34,7 @@ contract MainCompetition {
     }
 
     // As an admin, I can pull an array of competitions than I'm an admin of
-    function getMyCompetitions() public {
+    function getCompetitions() public {
 
     }
     // As an admin, I can end a competition and select the winning participant

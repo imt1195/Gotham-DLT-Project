@@ -1,6 +1,8 @@
-pragma solidity >=0.4.21 <0.6.0;
+pragma solidity >=0.5.0 <0.6.0;
 
-contract MainCompetition {
+import "./ownable.sol";
+
+contract MainCompetition is Ownable {
     // TO-DO: add OpenZeppelin to transfer ownership of contract
 
     address public _owner;
@@ -25,11 +27,6 @@ contract MainCompetition {
     }
 
     event CompetitionCreated (uint256 CID, string name);
-
-    modifier isOwner() {
-        require(msg.sender == _owner, "The Owner");
-        _;
-    }
 
     modifier isCompetition (uint256 _CID) {
         require(CIDToCompetition[_CID].CID > 0, "No Competition started with that ID");
@@ -61,16 +58,13 @@ contract MainCompetition {
         _;
     }
 
-    constructor () public {
-        _owner = msg.sender;
-    }
-
     //TO-DO: add Counter
-    function createCompetition (string memory _name, uint256 _totalPrize, uint256 _fee) public payable isOwner() {
+    function createCompetition (string memory _name, uint256 _totalPrize, uint256 _fee) public payable onlyOwner {
 
     }
 
-    function endCompetition (uint256 _CID) public isAdmin() isAdminOf(_CID) {
+    // Ends Competition -- Rescricted to Admins and Only Admins of this Competition
+    function endCompetition (uint256 _CID) public isAdminOf(_CID) {
 
     }
 
@@ -83,6 +77,7 @@ contract MainCompetition {
         if (CIDToCompetition[_CID].fee > 0) {
             require(msg.value >= CIDToCompetition[_CID].fee, "Value did not meet the competition fee");
         }
+        
 
     }
 

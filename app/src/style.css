@@ -1,4 +1,29 @@
 body {
-    
+    background: linear-gradient(#e66465, #9198e5);
+    font-family: Arial;
 }
 
+.container {
+    text-align: center;
+	background-color: white;
+	margin-top: 10px;
+	min-height: 40%;
+	padding: 15px;
+}
+
+button {
+    border: none;
+    padding: 10px;
+    text-transform: lowercase;
+    letter-spacing: 2px;
+}
+
+input {
+    padding: 10px;
+}
+
+h1 {
+    letter-spacing: 2px;
+    font-style: italic;
+    text-transform: lowercase;
+}

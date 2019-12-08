@@ -16,12 +16,10 @@ contract MainCompetition {
     Competition[] public competitions;
 
     mapping(uint => address) public compToAdmin;
-    
 
     function set(uint x) public {
         storedData = x;
     }
-
 
     // Internal function for creating a competition
     function _createComp (string memory _name, uint256 _totalPrize) internal {

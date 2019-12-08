@@ -5,7 +5,9 @@ import {
   ContractForm,
 } from "@drizzle/react-components";
 
-import logo from "./logo.png";
+// import logo from "./logo.png";
+// import logo from "./giphy.gif"
+import logo from "./hackathon.jpg"
 
 export default ({ accounts }) => (
   <div className="App">
@@ -34,7 +36,7 @@ export default ({ accounts }) => (
     </div>
 
     <div className="section">
-      <h2>TutorialToken</h2>
+      <h2>TutorialTokenPEANUT BUTTER</h2>
       <p>
         Here we have a form with custom, friendly labels. Also note the token
         symbol will not display a loading indicator. We've suppressed it with
@@ -42,7 +44,7 @@ export default ({ accounts }) => (
         constant.
       </p>
       <p>
-        <strong>Total Supply: </strong>
+        <strong>Total Sly: </strong>
         <ContractData
           contract="TutorialToken"
           method="totalSupply"
@@ -84,4 +86,6 @@ export default ({ accounts }) => (
       <ContractData contract="ComplexStorage" method="singleDD" />
     </div>
   </div>
+
+
 );

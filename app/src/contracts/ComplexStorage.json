@@ -3691,12 +3691,13 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xc8ac80d3176A1A847831Be931c5517cB1C00F9dd",
-      "transactionHash": "0x3152ace7ae7c75a047ed69603e92b96ca2a9c954d68e8760c4275804bdc07099"
+      "address": "0x95bB03b2C9e0Dff97d817fd931e4Ce5cFE43D6AC",
+      "transactionHash": "0xd146aa4013f5a84241cc61ada509c5070c51e23003f589c7fafce6b7542de8d4"
     }
   },
-  "schemaVersion": "3.0.12",
-  "updatedAt": "2019-12-07T20:52:38.546Z",
+  "schemaVersion": "3.0.19",
+  "updatedAt": "2019-12-07T23:50:05.172Z",
+  "networkType": "ethereum",
   "devdoc": {
     "methods": {}
   },
